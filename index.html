@@ -1,0 +1,89 @@
+<!-- thank you Michael Yang! github.com/themichaelyang/ at Recurse Center! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <meta name="description" content="">
+  <style>
+    body {
+      display: flex;
+    }
+
+    .sidebar {
+      flex-direction: row;
+      border: solid 1px black;
+      height: calc(100vh - 18px);
+      width: fit-content;
+      padding: 6px;
+      border-radius: 6px;
+      margin-right: 12px;
+      box-sizing: border-box;
+      li {
+        list-style: none;
+      }
+    }
+
+    .messages {
+      border: solid 1px black;
+      border-radius: 6px;
+      flex: 1;
+      padding: 6px;
+      position: relative;
+    }
+
+    .messages-bottom {
+      display: flex;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      margin-left: -6px;
+    }
+
+    .message-submit {
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .message-input {
+      border-top: solid 1px black;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+      border-radius: 6px;
+      box-sizing: border-box;
+      flex: 1;
+    }
+
+    .message-input::after {
+      width: 10px;
+      display: block;
+      z-index: 1;
+      position: absolute;
+      content: 'hello';
+      background: black;
+    }
+
+    .human-message::before {
+      content: 'you: '
+    }
+
+    .ai-message::before {
+      content: 'ai: '
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <li><div class="chat">Greeting message</div></li>
+  </nav>
+  <di class="messages">
+    <div class="human-message">hello there!</div>
+    <div class="ai-message">Hey there! 👋 How’s it going?</div>
+    <div class="messages-bottom"><input name="message-input" class="message-input"></input><button class="message-submit">Submit</button></div>
+  </div>
+</body>
+</html>
