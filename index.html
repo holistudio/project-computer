@@ -63,6 +63,8 @@
       font-size: 1rem;
       box-sizing: border-box;
       flex: 1;
+      resize: vertical;
+      line-height: 1.5;
     }
 
     .message-input::after {
@@ -90,7 +92,7 @@
   <div class="messages">
     <div class="human-message">hello there!</div>
     <div class="ai-message">Hey there! 👋 How’s it going?</div>
-    <div class="messages-bottom"><input name="message-input" class="message-input"></input><button class="message-submit">Submit</button></div>
+    <div class="messages-bottom"><textarea name="message-input" class="message-input" rows="3"></textarea><button class="message-submit">Submit</button></div>
   </div>
 </body>
 </html>
