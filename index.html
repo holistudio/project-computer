@@ -44,6 +44,9 @@
       cursor: pointer;
       padding: 4px;
       padding-bottom: 5px;
+      background-color: black;
+      color: white;
+      border: none;
     }
 
     .sidebar-header {
@@ -131,7 +134,7 @@
 </head>
 <body>
   <nav class="sidebar">
-    <button id="collapse-btn">⬅</button>
+    <button id="collapse-btn">⇐</button>
     <div class="sidebar-header">Chats</div>
     <ul>
       <li><div class="chat">Greeting message</div></li>
@@ -152,9 +155,9 @@
       sidebar.classList.toggle('collapsed');
 
       if (sidebar.classList.contains('collapsed')) {
-        collapseBtn.textContent = '➡';
+        collapseBtn.textContent = '⇒';
       } else {
-        collapseBtn.textContent = '⬅';
+        collapseBtn.textContent = '⇐';
       }
     });
   </script>
