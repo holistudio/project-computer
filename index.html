@@ -24,6 +24,15 @@
       padding: 6px;
       margin-right: 12px;
       box-sizing: border-box;
+    }
+
+    .sidebar-header {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .sidebar ul {
+      padding-left: 0;
       li {
         list-style: none;
       }
@@ -95,7 +104,10 @@
 </head>
 <body>
   <nav class="sidebar">
-    <li><div class="chat">Greeting message</div></li>
+    <div class="sidebar-header">Chats</div>
+    <ul>
+      <li><div class="chat">Greeting message</div></li>
+    </ul>
   </nav>
   <div class="messages">
     <div class="human-message">hello there!</div>
