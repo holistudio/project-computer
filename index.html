@@ -21,8 +21,27 @@
       border: solid 1px black;
       height: calc(100vh - 18px);
       width: 15%;
+      min-width: 15%; /* Keep original width for expanding */
       margin-right: 12px;
       box-sizing: border-box;
+      position: relative; /* For positioning the button */
+      transition: min-width 0.3s ease, width 0.3s ease; /* Smooth animation */
+    }
+
+    .sidebar.collapsed {
+      min-width: 40px; /* Width when collapsed */
+      width: 40px;
+    }
+
+    .sidebar.collapsed > :not(#collapse-btn) {
+      display: none; /* Hide all children except the button */
+    }
+
+    #collapse-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      cursor: pointer;
     }
 
     .sidebar-header {
@@ -110,6 +129,7 @@
 </head>
 <body>
   <nav class="sidebar">
+    <button id="collapse-btn">←</button>
     <div class="sidebar-header">Chats</div>
     <ul>
       <li><div class="chat">Greeting message</div></li>
@@ -121,5 +141,20 @@
     <div class="ai-message">Hey there! 👋 How’s it going?</div>
     <div class="messages-bottom"><textarea name="message-input" class="message-input" rows="3"></textarea><button class="message-submit">Submit</button></div>
   </div>
+
+  <script>
+    const sidebar = document.querySelector('.sidebar');
+    const collapseBtn = document.querySelector('#collapse-btn');
+
+    collapseBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+
+      if (sidebar.classList.contains('collapsed')) {
+        collapseBtn.textContent = '→';
+      } else {
+        collapseBtn.textContent = '←';
+      }
+    });
+  </script>
 </body>
 </html>
