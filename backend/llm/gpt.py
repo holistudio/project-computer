@@ -181,10 +181,11 @@ class GPTModel(nn.Module):
         return logits
 
 class GPT2Agent(object):
-    def __init__(self, temperature=0.0, top_k=None):
+    def __init__(self, temperature=0.0, top_k=None, max_new_tokens=50):
         # token sampling parameters 
         self.temperature = temperature
         self.top_k = top_k
+        self.max_new_tokens = max_new_tokens
 
         # load weights
         model_size = CHOOSE_MODEL.split(" ")[-1].lstrip("(").rstrip(")")
@@ -194,7 +195,6 @@ class GPT2Agent(object):
         settings = json.load(open(os.path.join(model_dir, "hparams.json"), "r", encoding="utf-8"))
         params = load_gpt2_params_from_tf_ckpt(tf_ckpt_path, settings)
         
-
         self.model = GPTModel(BASE_CONFIG)
         self._load_weights_into_gpt(self.model, params)
         self.model.to(device)
@@ -318,7 +318,7 @@ class GPT2Agent(object):
         token_ids = self.generate(
             model=self.model,
             idx=encoded,
-            max_new_tokens=100,
+            max_new_tokens=self.max_new_tokens,
             context_size=BASE_CONFIG["context_length"],
             eos_id=50256,
             temperature=self.temperature,
