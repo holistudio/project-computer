@@ -11,7 +11,8 @@ def chat():
             user_message = input("\n>: ")
 
             messages += f"me: {user_message}\n\n"
-            
+
+            # print(f"\n\nDEBUG:\n{"*"*10}\n{messages}{"*"*10}\n")
             response = llm.invoke(messages)
 
             messages += f"ai: {response}\n\n"
