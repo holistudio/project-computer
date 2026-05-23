@@ -197,7 +197,8 @@ class GPT2Agent(object):
 
         self.model = GPTModel(BASE_CONFIG)
         self._load_weights_into_gpt(self.model, params)
-        print(f"{"*"*10}GPT-2({model_size}) LOADED SUCCESSFULLY{"*"*10}")
+        self.model.to(device)
+        print(f"{"*"*10}GPT-2({model_size}) LOADED SUCCESSFULLY on {device}{"*"*10}")
         self.model.eval()
 
         pass
@@ -300,7 +301,7 @@ class GPT2Agent(object):
 
     def text_to_token_ids(self, text, tokenizer):
         encoded = tokenizer.encode(text, allowed_special={'<|endoftext|>'})
-        encoded_tensor = torch.tensor(encoded).unsqueeze(0) # .unsqueeze(0) adds a dimension for batch
+        encoded_tensor = torch.tensor(encoded).unsqueeze(0).to(device) # .unsqueeze(0) adds a dimension for batch
         return encoded_tensor
 
     def token_ids_to_text(self, token_ids, tokenizer):
