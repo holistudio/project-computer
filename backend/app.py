@@ -4,7 +4,7 @@ import json
 
 
 def chat():
-    llm = GPT2Agent(temperature=1.4, top_k=25)
+    llm = GPT2Agent(temperature=0.7, top_k=25, max_new_tokens=50)
     # llm = DummyModel()
 
     with open("chat_log.txt", "a") as log_file:
