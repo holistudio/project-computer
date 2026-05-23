@@ -1,7 +1,9 @@
 from llm.dumbell import DummyModel
+from llm.gpt import GPT2Agent
 
 def chat():
-    llm = DummyModel()
+    llm = GPT2Agent()
+    # llm = DummyModel()
 
     with open("chat_log.txt", "a") as log_file:
         messages = "Instructions: Have a fun chat with me!\n\n"
