@@ -1,4 +1,4 @@
-from dumbell import DummyModel
+from llm.dumbell import DummyModel
 
 def chat():
     llm = DummyModel()
