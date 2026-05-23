@@ -134,4 +134,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
 backend/chat_log.txt
+
+__pycache__/
