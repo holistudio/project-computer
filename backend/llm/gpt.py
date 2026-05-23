@@ -181,7 +181,11 @@ class GPTModel(nn.Module):
         return logits
 
 class GPT2Agent(object):
-    def __init__(self):
+    def __init__(self, temperature=0.0, top_k=None):
+        # token sampling parameters 
+        self.temperature = temperature
+        self.top_k = top_k
+
         # load weights
         model_size = CHOOSE_MODEL.split(" ")[-1].lstrip("(").rstrip(")")
         models_dir = "gpt2"
@@ -302,8 +306,10 @@ class GPT2Agent(object):
     def token_ids_to_text(self, token_ids, tokenizer):
         flat = token_ids.squeeze(0) # remove batch dimension
         return tokenizer.decode(flat.tolist())
-    
+
     def invoke(self, messages):
+        # print(f"\n\n[LLM_messages]: {messages}\n\n")
+
         # convert message to tokens
         encoded = self.text_to_token_ids(messages, tokenizer)
 
@@ -311,14 +317,24 @@ class GPT2Agent(object):
         token_ids = self.generate(
             model=self.model,
             idx=encoded,
-            max_new_tokens=50,
+            max_new_tokens=100,
             context_size=BASE_CONFIG["context_length"],
-            eos_id=50256
+            eos_id=50256,
+            temperature=self.temperature,
+            top_k=self.top_k
         )
 
         # convert generated tokens back to text
         generated_text = self.token_ids_to_text(token_ids, tokenizer)
+        # print(f"\n\n[LLM_generated_text]: {generated_text}\n\n")
 
         # return response
-        response = generated_text
+        response_text = (
+            generated_text[len(messages):]
+            .strip()
+        )
+        # print(f"\n\n[LLM_response_text]: {response_text}\n\n")
+
+        response = response_text.strip()
+        # print(f"\n\n[LLM_response]: {response}\n\n")
         return response
