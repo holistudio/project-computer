@@ -18,17 +18,17 @@ def chat():
                 "given_message": "",
                 "ai_message": "",
             }
-            user_message = input("\n>: ")
+            user_message = input("\n>> ")
             latest["user_message"] = user_message
 
-            messages += f"me: {user_message}\n"
+            messages += f"\nME: {user_message}\n"
             latest["given_message"] = messages
 
             # print(f"\n\nDEBUG:\n{"*"*10}\n{messages}{"*"*10}\n")
             response = llm.invoke(messages)
             latest["ai_message"] = response
 
-            messages += f"ai: {response}\n"
+            messages += f"\nBOT: {response}\n"
 
             print(f"\nai: {response}")
 
