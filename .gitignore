@@ -139,3 +139,4 @@ backend/chat_log.txt
 
 __pycache__/
 /backend/llm/gpt2
+backend/latest.json
