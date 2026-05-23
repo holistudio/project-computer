@@ -194,6 +194,7 @@ class GPT2Agent(object):
         models_dir = "gpt2"
         model_dir = os.path.join("llm",models_dir, model_size)
         tf_ckpt_path = tf.train.latest_checkpoint(model_dir)
+        print("Loading GPT-2 params...")
         settings = json.load(open(os.path.join(model_dir, "hparams.json"), "r", encoding="utf-8"))
         params = load_gpt2_params_from_tf_ckpt(tf_ckpt_path, settings)
         
