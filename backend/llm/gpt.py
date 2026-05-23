@@ -26,7 +26,7 @@ model_configs = {
     "gpt2-xl (1558M)": {"emb_dim": 1600, "n_layers": 48, "n_heads": 25},
 }
 
-CHOOSE_MODEL = "gpt2-small (124M)"
+CHOOSE_MODEL = "gpt2-medium (355M)"
 BASE_CONFIG.update(model_configs[CHOOSE_MODEL])
 
 tokenizer = tiktoken.get_encoding("gpt2")
@@ -325,15 +325,12 @@ class GPT2Agent(object):
             top_k=self.top_k
         )
 
-        # convert generated tokens back to text
-        generated_text = self.token_ids_to_text(token_ids, tokenizer)
-        # print(f"\n\n[LLM_generated_text]: {generated_text}\n\n")
+        # slice in token space and keep only the newly generated tokens
+        num_prompt_tokens = encoded.shape[1]
+        new_token_ids = token_ids[:, num_prompt_tokens:]
 
-        # return response
-        response_text = (
-            generated_text[len(messages):]
-            .strip()
-        )
+        # convert only the new tokens back to text
+        response_text = self.token_ids_to_text(new_token_ids, tokenizer)
         # print(f"\n\n[LLM_response_text]: {response_text}\n\n")
 
         response = response_text.strip()
