@@ -29,9 +29,12 @@ def root():
 
 @app.route("/chat",methods=["POST"])
 def chat():
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not data or not data.get("messages"):
+        return jsonify({"error": "Missing or empty 'messages'"}), 400
+
     messages = data.get("messages", [])
-    user_input = messages[-1]["content"] if messages else ""
+    user_input = messages[-1]["content"]
 
     response = llm.invoke(messages)
 
