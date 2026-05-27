@@ -205,21 +205,6 @@ class GPT2Agent(object):
         self.model.eval()
         pass
 
-    def _format_messages(self, messages):
-        role_map = {
-            "system":    "System",
-            "user":      "User",
-            "assistant": "Assistant",
-        }
-        lines = []
-        for msg in messages:
-            prefix = role_map.get(msg["role"], msg["role"].capitalize())
-            lines.append(f"{prefix}: {msg['content']}")
-        # Append an empty "Assistant:" turn to prompt the model to continue
-        lines.append("Assistant:")
-        return "\n\n".join(lines) + " "
-
-    
     def _load_weights_into_gpt(self, gpt, params):
         def assign(left, right):
             if left.shape != right.shape:
@@ -287,8 +272,21 @@ class GPT2Agent(object):
         # re-use weights of the token embedding layer now in the output layer
         gpt.out_head.weight = assign(gpt.out_head.weight, params["wte"])
 
-
-    def generate(self, model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
+    def _format_messages(self, messages):
+        role_map = {
+            "system":    "System",
+            "user":      "User",
+            "assistant": "Assistant",
+        }
+        lines = []
+        for msg in messages:
+            prefix = role_map.get(msg["role"], msg["role"].capitalize())
+            lines.append(f"{prefix}: {msg['content']}")
+        # Append an empty "Assistant:" turn to prompt the model to continue
+        lines.append("Assistant:")
+        return "\n\n".join(lines) + " "
+    
+    def _generate(self, model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
         for _ in range(max_new_tokens):
             idx_cond = idx[:, -context_size:]
             with torch.no_grad():
@@ -313,12 +311,12 @@ class GPT2Agent(object):
             idx = torch.cat((idx, idx_next), dim=1)
         return idx
 
-    def text_to_token_ids(self, text, tokenizer):
+    def _text_to_token_ids(self, text, tokenizer):
         encoded = tokenizer.encode(text, allowed_special={'<|endoftext|>'})
         encoded_tensor = torch.tensor(encoded).unsqueeze(0).to(device) # .unsqueeze(0) adds a dimension for batch
         return encoded_tensor
 
-    def token_ids_to_text(self, token_ids, tokenizer):
+    def _token_ids_to_text(self, token_ids, tokenizer):
         flat = token_ids.squeeze(0) # remove batch dimension
         return tokenizer.decode(flat.tolist())
 
@@ -328,8 +326,8 @@ class GPT2Agent(object):
         prompt = self._format_messages(messages)
 
         # convert text template into tokens
-        encoded = self.text_to_token_ids(prompt, tokenizer)
-        token_ids = self.generate(
+        encoded = self._text_to_token_ids(prompt, tokenizer)
+        token_ids = self._generate(
             model=self.model,
             idx=encoded,
             max_new_tokens=self.max_new_tokens,
@@ -344,5 +342,5 @@ class GPT2Agent(object):
         new_token_ids = token_ids[:, num_prompt_tokens:]
 
         # convert only the new tokens back to text
-        response = self.token_ids_to_text(new_token_ids, tokenizer).strip()
+        response = self._token_ids_to_text(new_token_ids, tokenizer).strip()
         return response
