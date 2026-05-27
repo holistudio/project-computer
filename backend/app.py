@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from llm.gpt import GPT2Agent
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 
 app = Flask(__name__,
             template_folder="../frontend",
@@ -29,8 +29,7 @@ def log_latest(user_input, response):
 
 @app.route("/",methods=["GET"])
 def root():
-    # TODO: serve index.html
-    pass
+    return send_from_directory("index.html")
 
 @app.route("/chat",methods=["POST"])
 def chat():
