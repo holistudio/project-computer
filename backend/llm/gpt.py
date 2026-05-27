@@ -192,7 +192,7 @@ class GPT2Agent(object):
         # load weights
         model_size = CHOOSE_MODEL.split(" ")[-1].lstrip("(").rstrip(")")
         models_dir = "gpt2"
-        model_dir = os.path.join("llm",models_dir, model_size)
+        model_dir = os.path.join("llm", models_dir, model_size)
         tf_ckpt_path = tf.train.latest_checkpoint(model_dir)
         print("Loading GPT-2 params...")
         settings = json.load(open(os.path.join(model_dir, "hparams.json"), "r", encoding="utf-8"))
@@ -205,6 +205,19 @@ class GPT2Agent(object):
         self.model.eval()
 
         pass
+    def _format_messages(self, messages):
+        role_map = {
+            "system":    "System",
+            "user":      "User",
+            "assistant": "Assistant",
+        }
+        lines = []
+        for msg in messages:
+            prefix = role_map.get(msg["role"], msg["role"].capitalize())
+            lines.append(f"{prefix}: {msg['content']}")
+        # Append an empty "Assistant:" turn to prompt the model to continue
+        lines.append("Assistant:")
+        return "\n\n".join(lines) + " "
 
     
     def _load_weights_into_gpt(self, gpt, params):
@@ -217,9 +230,7 @@ class GPT2Agent(object):
         gpt.pos_emb.weight = assign(gpt.pos_emb.weight, params['wpe'])
         gpt.tok_emb.weight = assign(gpt.tok_emb.weight, params['wte'])
 
-        for b in range(len(params["blocks"])): # for each transformer block
-
-            # np.split divides weights into three equal parts for query, key, and value components
+        for b in range(len(params["blocks"])):
             q_w, k_w, v_w = np.split(
                 (params["blocks"][b]["attn"]["c_attn"])["w"], 3, axis=-1)
             
@@ -312,12 +323,9 @@ class GPT2Agent(object):
         return tokenizer.decode(flat.tolist())
 
     def invoke(self, messages):
-        # print(f"\n\n[LLM_messages]: {messages}\n\n")
+        prompt = self._format_messages(messages)
 
-        # convert message to tokens
-        encoded = self.text_to_token_ids(messages, tokenizer)
-
-        # pass tokens to generate()
+        encoded = self.text_to_token_ids(prompt, tokenizer)
         token_ids = self.generate(
             model=self.model,
             idx=encoded,
@@ -331,11 +339,6 @@ class GPT2Agent(object):
         # slice in token space and keep only the newly generated tokens
         num_prompt_tokens = encoded.shape[1]
         new_token_ids = token_ids[:, num_prompt_tokens:]
-
         # convert only the new tokens back to text
-        response_text = self.token_ids_to_text(new_token_ids, tokenizer)
-        # print(f"\n\n[LLM_response_text]: {response_text}\n\n")
-
-        response = response_text.strip()
-        # print(f"\n\n[LLM_response]: {response}\n\n")
+        response = self.token_ids_to_text(new_token_ids, tokenizer).strip()
         return response
