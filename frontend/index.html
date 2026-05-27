@@ -138,6 +138,21 @@
       color: white;
     }
 
+    .messages-history {
+      position: absolute;
+      top: 0;
+      bottom: 80px; /* leave room for input bar */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 10px 0;
+      box-sizing: border-box;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
     .messages-bottom {
       display: flex;
       position: absolute;
@@ -187,7 +202,8 @@
     }
     .human-message {
       margin: 0.75rem 0;
-      margin-left: 20%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .ai-message::before {
@@ -196,7 +212,8 @@
     }
     .ai-message {
       margin: 0.75rem 0;
-      margin-left: 20%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     /* Dark Mode Specific Element Styles */
@@ -234,6 +251,9 @@
         <input type="checkbox" id="dark-mode-switch">
         <span class="slider"></span>
       </label>
+    </div>
+    <div class="messages-history" id="messages-history">
+      <!-- chat messages will be injected here by app.js -->
     </div>
     <div class="messages-bottom"><textarea name="message-input" class="message-input" rows="3"></textarea><button class="message-submit">Submit</button></div>
   </div>
