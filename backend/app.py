@@ -25,7 +25,7 @@ def log_latest(user_input, response):
 
 @app.route("/",methods=["GET"])
 def root():
-    return send_from_directory("index.html")
+    return send_from_directory(app.template_folder, "index.html")
 
 @app.route("/chat",methods=["POST"])
 def chat():
