@@ -203,8 +203,8 @@ class GPT2Agent(object):
         self.model.to(device)
         print(f"{"*"*10}GPT-2({model_size}) LOADED SUCCESSFULLY on {device}{"*"*10}")
         self.model.eval()
-
         pass
+
     def _format_messages(self, messages):
         role_map = {
             "system":    "System",
@@ -323,8 +323,11 @@ class GPT2Agent(object):
         return tokenizer.decode(flat.tolist())
 
     def invoke(self, messages):
+        # convert messages dictionary into
+        # text template
         prompt = self._format_messages(messages)
 
+        # convert text template into tokens
         encoded = self.text_to_token_ids(prompt, tokenizer)
         token_ids = self.generate(
             model=self.model,
@@ -339,6 +342,7 @@ class GPT2Agent(object):
         # slice in token space and keep only the newly generated tokens
         num_prompt_tokens = encoded.shape[1]
         new_token_ids = token_ids[:, num_prompt_tokens:]
+
         # convert only the new tokens back to text
         response = self.token_ids_to_text(new_token_ids, tokenizer).strip()
         return response
