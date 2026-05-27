@@ -1,12 +1,18 @@
 import json
+import os
 from datetime import datetime
 from llm.gpt import GPT2Agent
 
 from flask import Flask, request, jsonify, send_from_directory
 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__,
-            template_folder="../frontend",
-            static_folder="../frontend")
+            template_folder=os.path.join(BASE_DIR, "../frontend"),
+            static_folder=os.path.join(BASE_DIR, "../frontend"),
+            static_url_path="/static")
+# print("Static folder absolute path:", os.path.abspath(app.static_folder))
+# print("Exists:", os.path.exists(app.static_folder))
 
 llm = GPT2Agent(temperature=0.7, top_k=25, max_new_tokens=50)
 
