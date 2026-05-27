@@ -3,7 +3,7 @@ const messages = [
 ];
 
 const messagesContainer = document.querySelector(".messages");
-const messagesBottom = document.querySelector(".message-bottom");
+const messagesBottom = document.querySelector(".messages-bottom");
 
 const submitBtn = document.querySelector(".message-submit");
 const inputBox = document.querySelector(".message-input");
