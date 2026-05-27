@@ -10,10 +10,6 @@ app = Flask(__name__,
 
 llm = GPT2Agent(temperature=0.7, top_k=25, max_new_tokens=50)
 
-# initialize messages (assume new single session)
-# TODO: handle this with get_or_create_session() later
-messages = [{"role": "system", "content": "You are a helpful person. Have a fun chat with the user."}]
-
 # log chat in a file
 log_path = f"chat_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
@@ -33,13 +29,11 @@ def root():
 
 @app.route("/chat",methods=["POST"])
 def chat():
-    # data: { "session_id": "optional", "message": "user text" }
     data = request.get_json()
-    user_input = data.get("message", "")
-    messages.append({"role":"user", "content":user_input})
+    messages = data.get("messages", [])
+    user_input = messages[-1]["content"] if messages else ""
 
     response = llm.invoke(messages)
-    messages.append({"role": "assistant", "content":response})
 
     log_latest(user_input, response)
 
