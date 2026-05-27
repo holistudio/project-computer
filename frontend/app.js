@@ -11,7 +11,7 @@ const inputBox = document.querySelector(".message-input");
 function appendMessage(role, text) {
     const div = document.createElement('div');
     div.className = role === "user" ? "human-message" : "ai-message";
-    div.textContent = text;
+    div.innerHTML = text.replace(/\n/g, '<br>');
     messagesHistory.appendChild(div);
     messagesHistory.scrollTop = messagesHistory.scrollHeight;
 }
