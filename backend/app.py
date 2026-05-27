@@ -4,7 +4,10 @@ from llm.gpt import GPT2Agent
 
 from flask import Flask, request, jsonify
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder="../frontend",
+            static_folder="../frontend")
+
 llm = GPT2Agent(temperature=0.7, top_k=25, max_new_tokens=50)
 
 # initialize messages (assume new single session)
@@ -40,7 +43,7 @@ def chat():
     messages.append({"role": "assistant", "content":response})
 
     log_latest(user_input, response)
-    
+
     return jsonify({
         "response": response
     })
