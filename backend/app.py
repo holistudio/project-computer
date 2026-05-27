@@ -15,12 +15,11 @@ def chat():
     with open(log_path, "a") as log_file:
         while True:
             user_input = input("\n>> ")
-
             messages.append({"role": "user", "content": user_input})
-            response = llm.invoke(messages)
-            messages.append({"role": "assistant", "content": response})
 
+            response = llm.invoke(messages)
             print(f"\nai: {response}")
+            messages.append({"role": "assistant", "content": response})
 
             # Log each turn as a JSONL record — one JSON object per line
             for entry in [
