@@ -141,3 +141,4 @@ __pycache__/
 /backend/llm/gpt2
 backend/latest.json
 *.jsonl
+.DS_Store
